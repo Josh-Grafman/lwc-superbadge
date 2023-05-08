@@ -8,6 +8,9 @@
 .localdevserver/
 deploy-options.json
 
+# LWC Testing
+**/__tests__*
+
 # LWC VSCode autocomplete
 **/lwc/jsconfig.json
 
