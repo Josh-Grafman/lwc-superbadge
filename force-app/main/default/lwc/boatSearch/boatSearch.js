@@ -14,5 +14,13 @@ export default class BoatSearch extends LightningElement {
   // This custom event comes from the form
   searchBoats(event) { }
 
-  createNewBoat() { }
+  createNewBoat() {
+    this[NavigationMixin.Navigate]({
+      type: 'standard__objectPage',
+      attributes: {
+        objectApiName: 'Boat__c',
+        actionName: 'new',
+      }
+    });
+  }
 }
