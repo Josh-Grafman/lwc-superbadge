@@ -21,6 +21,30 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+      <members>BoatDataService</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
+      <members>BoatDataServiceTest</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
+      <members>GenerateData</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
+      <members>GenerateDataTests</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
+      <members>SimilarBoatsController</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
+      <members>SimilarBoatsControllerTest</members>
+      <name>ApexClass</name>
+    </types>
+    <types>
         <members>*</members>
         <name>AuraDefinitionBundle</name>
     </types>
