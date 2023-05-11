@@ -12,8 +12,17 @@ export default class BoatMap extends LightningElement {
   subscription = null;
   boatId;
 
-  // Getter and Setter to allow for logic to run on recordId change
-  // this getter must be public
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-11
+    Description:	getter/setter for recordId
+  
+    Called by:		---
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   @api
   get recordId() {
     return this.boatId;
@@ -30,8 +39,17 @@ export default class BoatMap extends LightningElement {
   @wire(MessageContext)
   messageContext;
 
-  // Getting record's location to construct map markers using recordId
-  // Wire the getRecord method using ('$boatId')
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-11
+    Description:	Get lattitude and longitude from db for this boatId
+  
+    Called by:		boatId update
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   @wire(getRecord, { recordId: '$boatId', fields: BOAT_FIELDS })
   wiredRecord({ error, data }) {
     // Error handling
@@ -48,7 +66,17 @@ export default class BoatMap extends LightningElement {
     }
   }
 
-  // Subscribes to the message channel
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-11
+    Description:	Boat message channel subscriber
+  
+    Called by:		connectedCallback
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   subscribeMC() {
     // recordId is populated on Record Pages, and this component
     // should not update when this component is on a record page.
@@ -71,7 +99,17 @@ export default class BoatMap extends LightningElement {
     this.subscribeMC();
   }
 
-  // Creates the map markers array with the current boat's location for the map.
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-11
+    Description:	Updates markers for the lightning-map component
+  
+    Called by:		wiredRecord
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   updateMap(Longitude, Latitude) {
     this.mapMarkers = [{
       location: {
