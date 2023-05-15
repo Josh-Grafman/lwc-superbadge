@@ -1,7 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import getBoats from '@salesforce/apex/BoatDataService.getBoats';
 import { MessageContext, publish } from 'lightning/messageService';
-import BOAT_MESSAGE_CHANNEL from '@salesforce/messageChannel/BoatMessageChannel__c';
+import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
 import updateBoatList from '@salesforce/apex/BoatDataService.updateBoatList';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
@@ -14,13 +14,13 @@ const ERROR_VARIANT = 'error';
 export default class BoatSearchResults extends LightningElement {
   selectedBoatId;
   columns = [
-    { label: 'Name', fieldName: 'Name', editable: true },
-    { label: 'Length', fieldName: 'Length__c', editable: true },
-    { label: 'Price', fieldName: 'Price__c', editable: true },
-    { label: 'Description', fieldName: 'Description__c', editable: true }
+    { label: 'Name', type: "text", fieldName: 'Name', editable: true },
+    { label: 'Length', type: "number", fieldName: 'Length__c', editable: true },
+    { label: 'Price', type: "currency", typeAttributes: { currencyCode: "USD" }, fieldName: 'Price__c', editable: true },
+    { label: 'Description', type: "text", fieldName: 'Description__c', editable: true }
   ];
   boatTypeId = '';
-  boats = { data: undefined, error: undefined };
+  boats;
   isLoading = false;
   boatWireData;
 
@@ -30,12 +30,19 @@ export default class BoatSearchResults extends LightningElement {
 
   // wired getBoats method 
   @wire(getBoats, { boatTypeId: '$boatTypeId' })
-  wiredBoats(boatWireData) {
-    this.boatWireData = boatWireData;
-    const { data, error } = boatWireData;
+  wiredBoats({ data, error }) {
+    this.boatWireData = data;
 
-    console.log(data);
-    this.boats = data;
+    if (data) {
+      this.boats = data;
+    } else if (error) {
+      const errorToast = new ShowToastEvent({
+        title: "Error in wiredBoats",
+        message: error.body.message,
+        variant: ERROR_VARIANT
+      });
+      this.dispatchEvent(errorToast);
+    };
     this.notifyLoading(false);
   }
 
@@ -91,13 +98,14 @@ export default class BoatSearchResults extends LightningElement {
 
   updateSelectedTile(event) {
     this.selectedBoatId = event.detail.boatId;
-    sendMessageService(this.selectedBoatId);
+    this.sendMessageService(this.selectedBoatId);
   }
 
+
   /*===========================================================================
-    Author:			Josh Grafman, Upsource Solutions
-    Created Date:	2023-05-11
-    Description:	Pass the Id of the selected boat to any components listening
+  Author:			Josh Grafman, Upsource Solutions
+  Created Date:	2023-05-11
+  Description:	Pass the Id of the selected boat to any components listening
   
     Called by:		updateSelectedTile
     Testing Method:	---
@@ -109,7 +117,7 @@ export default class BoatSearchResults extends LightningElement {
     const payload = {
       recordId: boatId
     };
-    publish(this.messageContext, BOAT_MESSAGE_CHANNEL, payload);
+    publish(this.messageContext, BOATMC, payload);
   }
 
 
@@ -138,12 +146,13 @@ export default class BoatSearchResults extends LightningElement {
       });
       this.dispatchEvent(successToast);
     } catch (error) {
-      console.log(error.body.message);
+      console.log(body.message);
       const errorToast = new ShowToastEvent({
         title: ERROR_TITLE,
         message: error.body.message,
         variant: ERROR_VARIANT
       });
+      this.isLoading = false;
       this.dispatchEvent(errorToast);
     } finally {
       // clear draft values
