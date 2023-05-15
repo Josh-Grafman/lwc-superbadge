@@ -1,5 +1,5 @@
 .tile {
-  width: var(--lwc-spacingMedium, 1rem);
+  width: 100%;
   height: 220px;
   padding: var(--lwc-borderWidthThin, 1px) !important;
   background-position: center;
