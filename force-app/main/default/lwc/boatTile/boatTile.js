@@ -6,13 +6,33 @@ export default class BoatTile extends LightningElement {
   @api boat;
   @api selectedBoatId;
 
-  // Getter for dynamically setting the background image for the picture
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Return CSS prop of Picture__c from boat
+  
+    Called by:		boatTile markup
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   get backgroundStyle() {
     return `background-image:url(${this.boat.Picture__c})`;
   }
 
-  // Getter for dynamically setting the tile class based on whether the
-  // current boat is selected
+
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Return classnames for tile based on boat selection
+  
+    Called by:		boatTile markup
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   get tileClass() {
     if (this.boat.Id == this.selectedBoatId) {
       return TILE_WRAPPER_SELECTED_CLASS;
@@ -21,7 +41,17 @@ export default class BoatTile extends LightningElement {
     }
   }
 
-  // Fires event with the Id of the boat that has been selected.
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Dispatch boatselect event, passing Id of the boad as a detail
+  
+    Called by:		onClick event in boatTile component wrapper div
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   selectBoat() {
     const boatSelect = new CustomEvent('boatselect', {
       detail: {
