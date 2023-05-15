@@ -30,8 +30,9 @@ export default class BoatSearchResults extends LightningElement {
 
   // wired getBoats method 
   @wire(getBoats, { boatTypeId: '$boatTypeId' })
-  wiredBoats({ data, error }) {
-    this.boatWireData = data;
+  wiredBoats(boatWireData) {
+    this.boatWireData = boatWireData;
+    const { data, error } = boatWireData;
 
     if (data) {
       this.boats = data;
