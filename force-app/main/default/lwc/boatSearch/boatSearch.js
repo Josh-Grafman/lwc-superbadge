@@ -4,21 +4,62 @@ import { NavigationMixin } from 'lightning/navigation';
 export default class BoatSearch extends NavigationMixin(LightningElement) {
   isLoading = false;
 
-  // Handles loading event
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Handler for onloading event from boatSearchResults
+  
+    Called by:		boatSearchResult onloading event
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   handleLoading() {
     this.isLoading = true;
   }
 
-  // Handles done loading event
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Handler for ondoneloading event from boatSearchResults
+  
+    Called by:		boatSearchResult ondoneloading event
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   handleDoneLoading() {
     this.isLoading = false;
   }
 
-  // Handles search boat event
-  // This custom event comes from the form
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Call a search using the public searchBoats method of
+                  boatSearchResults
+  
+    Called by:		search event from boatSearchForm
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   searchBoats(event) {
     this.template.querySelector('c-boat-search-results').searchBoats(event.detail.boatTypeId);
   }
+
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Open record creation modal for a new boat
+  
+    Called by:		lightning-button "New Boat"
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
 
   createNewBoat() {
     this[NavigationMixin.Navigate]({
