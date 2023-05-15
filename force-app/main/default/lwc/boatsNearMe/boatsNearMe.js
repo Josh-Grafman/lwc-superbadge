@@ -14,9 +14,17 @@ export default class BoatsNearMe extends LightningElement {
   latitude;
   longitude;
 
-  // Add the wired method from the Apex Class
-  // Name it getBoatsByLocation, and use latitude, longitude and boatTypeId
-  // Handle the result and calls createMapMarkers
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Get boat locations and display them
+  
+    Called by:		Wire service whenever lat, long, or typeId change
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   @wire(getBoatsByLocation, { latitude: '$latitude', longitude: '$longitude', boatTypeId: '$boatTypeId' })
   wiredBoatsJSON({ data, error }) {
     this.isLoading = true;
@@ -33,8 +41,17 @@ export default class BoatsNearMe extends LightningElement {
     this.isLoading = false;
   }
 
-  // Controls the isRendered property
-  // Calls getLocationFromBrowser()
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Call getLocationFromBrowser
+  
+    Called by:		First component render
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   renderedCallback() {
     if (!this.isRendered) {
       this.getLocationFromBrowser();
@@ -42,8 +59,17 @@ export default class BoatsNearMe extends LightningElement {
     }
   }
 
-  // Gets the location from the Browser
-  // position => {latitude and longitude}
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Get user's location from browser's geolocation API
+  
+    Called by:		renderedCallback
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   getLocationFromBrowser() {
     this.isLoading = true;
     navigator.geolocation.getCurrentPosition(({ coords }) => {
@@ -53,7 +79,18 @@ export default class BoatsNearMe extends LightningElement {
     });
   }
 
-  // Creates the map markers
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-15
+    Description:	Parse JSON response from Apex, and add pins to array,
+                  including user location
+  
+    Called by:		wiredBoatsJSON
+    Testing Method:	---
+    Test Run Date:	---
+    Percentage Covered at test time:	---
+    =========================================================================*/
+
   createMapMarkers(boatData) {
     boatData = JSON.parse(boatData);
     const newMarkers = boatData.map(boat => (
