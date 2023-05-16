@@ -16,12 +16,26 @@ export default class FiveStarRating extends LightningElement {
   editedValue;
   isRendered;
 
-  //getter function that returns the correct class depending on if it is readonly
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-16
+    Description:	Conditional styling utility getter
+
+    Called by:		fiveStarRating markup
+    =========================================================================*/
+
   get starClass() {
     return this.readOnly ? READ_ONLY_CLASS : EDITABLE_CLASS;
   }
 
-  // Render callback to load the script once the component renders.
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-16
+    Description:	Procures static resources for this component and inits
+
+    Called by:		LWC lifecycle - first render
+    =========================================================================*/
+
   async renderedCallback() {
     if (this.isRendered) {
       return;
@@ -31,9 +45,14 @@ export default class FiveStarRating extends LightningElement {
     this.isRendered = true;
   }
 
-  //Method to load the 3rd party script and initialize the rating.
-  //call the initializeRating function after scripts are loaded
-  //display a toast with error message if there is an error loading script
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-16
+    Description:	Procure static resources
+
+    Called by:		renderedCallback
+    =========================================================================*/
+
   async loadScript() {
     try {
       await loadScript(this, fivestar + '/rating.js');
@@ -48,6 +67,14 @@ export default class FiveStarRating extends LightningElement {
       this.dispatchEvent(errorToast);
     }
   }
+
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-16
+    Description:	
+
+    Called by:		---
+    =========================================================================*/
 
   initializeRating() {
     let domEl = this.template.querySelector('ul');
