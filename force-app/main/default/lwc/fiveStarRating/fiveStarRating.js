@@ -22,11 +22,11 @@ export default class FiveStarRating extends LightningElement {
   }
 
   // Render callback to load the script once the component renders.
-  renderedCallback() {
+  async renderedCallback() {
     if (this.isRendered) {
       return;
     }
-    this.loadScript();
+    await this.loadScript();
     this.initializeRating();
     this.isRendered = true;
   }
@@ -34,10 +34,10 @@ export default class FiveStarRating extends LightningElement {
   //Method to load the 3rd party script and initialize the rating.
   //call the initializeRating function after scripts are loaded
   //display a toast with error message if there is an error loading script
-  loadScript() {
+  async loadScript() {
     try {
-      loadScript(this, fivestar + '/rating.js');
-      loadStyle(this, fivestar + '/rating.css');
+      await loadScript(this, fivestar + '/rating.js');
+      await loadStyle(this, fivestar + '/rating.css');
     } catch (e) {
       // const error = { body: { message: e.message } };
       const errorToast = new ShowToastEvent({
