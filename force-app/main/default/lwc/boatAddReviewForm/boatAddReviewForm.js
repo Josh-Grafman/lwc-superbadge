@@ -25,6 +25,7 @@ export default class BoatAddReviewForm extends LightningElement {
   @api
   set recordId(value) {
     this.boatId = value;
+    this.setAttribute('boatId', this.boatId);
   }
 
   // Gets user rating input from stars component
