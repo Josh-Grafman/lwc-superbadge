@@ -13,13 +13,17 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
   isLoading;
 
   // Getter and Setter to allow for logic to run on recordId change
-  get recordId() { }
-  @api set recordId(value) {
+  @api
+  get recordId() {
+    return this.boatId;
+  }
+  set recordId(value) {
     this.boatId = value;
     this.getReviews();
   }
 
   // Getter to determine if there are reviews to display
+  @api
   get reviewsToShow() {
     if (this.boatReviews === null || this.boatReviews === undefined) return false;
     if (this.boatReviews.length < 1) return false;
@@ -49,8 +53,7 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
       this.boatReviews = await getAllReviews({
         boatId: this.boatId
       });
-
-      // await this.refresh();
+      console.log(JSON.stringify(this.boatReviews));
     } catch (e) {
       console.log(e.body.message);
     }
@@ -58,5 +61,15 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
   }
 
   // Helper method to use NavigationMixin to navigate to a given record on click
-  navigateToRecord(event) { }
+  navigateToRecord(event) {
+    const authorId = event.target.getAttribute('data-record-id');
+    this[NavigationMixin.Navigate]({
+      type: 'standard__recordPage',
+      attributes: {
+        actionName: "view",
+        recordId: authorId,
+        objectApiName: "User"
+      }
+    });
+  }
 }

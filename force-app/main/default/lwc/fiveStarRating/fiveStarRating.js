@@ -10,7 +10,7 @@ const READ_ONLY_CLASS = 'readonly c-rating';
 
 export default class FiveStarRating extends LightningElement {
   //initialize public readOnly and value properties
-  readOnly;
+  @api readOnly;
   @api value;
 
   editedValue;
