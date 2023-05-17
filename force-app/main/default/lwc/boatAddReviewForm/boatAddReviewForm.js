@@ -19,7 +19,9 @@ export default class BoatAddReviewForm extends LightningElement {
   labelRating = 'Rating';
 
   // Public Getter and Setter to allow for logic to run on recordId change
-  get recordId() { }
+  get recordId() {
+    return this.boatId;
+  }
   @api
   set recordId(value) {
     this.boatId = value;
