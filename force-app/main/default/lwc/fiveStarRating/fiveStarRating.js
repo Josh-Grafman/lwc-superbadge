@@ -93,6 +93,12 @@ export default class FiveStarRating extends LightningElement {
     );
   }
 
+  @api setRating(value) {
+    this.value = value;
+    // customized this function internally to know when it is being reset
+    this.ratingObj.setRating(this.value, false, true);
+  }
+
   // Method to fire event called ratingchange with the following parameter:
   // {detail: { rating: CURRENT_RATING }}); when the user selects a rating
   ratingChanged(rating) {
