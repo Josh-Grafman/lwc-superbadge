@@ -1,0 +1,42 @@
+<template>
+  <template if:false={reviewsToShow}>
+    <div>No reviews available</div>
+  </template>
+  <template if:true={reviewsToShow}>
+    <div class="slds-feed reviews-style slds-is-relative slds-scrollable_y">
+      <template lwc:if={isLoading}>
+        <lightning-spinner variant="brand" size="small" alternative-text="Loading"></lightning-spinner>
+      </template>
+      <ul class="slds-feed__list">
+        <template for:each={boatReviews} for:item="boatReview">
+          <li class="slds-feed__item" key={boatReview.Id}>
+            <article class="slds-post">
+              <header class="slds-post__header slds-media">
+                <div class="slds-media__figure">
+                  <lightning-avatar variant="circle" src={boatReview.SmallPhotoUrl__c}></lightning-avatar>
+                </div>
+                <div class="slds-media__body">
+                  <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                    <p>
+                      {boatReview.Name}
+                      <!-- display creator’s name -->
+                      <span><!-- display creator’s company name --></span>
+                    </p>
+                  </div>
+                  <p class="slds-text-body_small">
+                    <!-- <lightning-formatted-date-time></lightning-formatted-date-time> -->
+                  </p>
+                </div>
+              </header>
+              <div class="slds-text-longform">
+                <p class="slds-text-title_caps"><!-- display Name --></p>
+                <!-- display Comment__c -->
+              </div>
+              <!-- display five star rating on readonly mode -->
+            </article>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </template>
+</template>
