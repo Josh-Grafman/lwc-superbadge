@@ -71,9 +71,9 @@ export default class FiveStarRating extends LightningElement {
   /*===========================================================================
     Author:			Josh Grafman, Upsource Solutions
     Created Date:	2023-05-16
-    Description:	
+    Description:	Initializes values for this component and sets it on the window
 
-    Called by:		---
+    Called by:		renderedCallback
     =========================================================================*/
 
   initializeRating() {
@@ -93,14 +93,29 @@ export default class FiveStarRating extends LightningElement {
     );
   }
 
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Custom function to set the rating of this component
+  
+    Called by:		boatAddReview component when review is submitted
+    =========================================================================*/
+
   @api setRating(value) {
     this.value = value;
     // customized this function internally to know when it is being reset
     this.ratingObj.setRating(this.value, false, true);
   }
 
-  // Method to fire event called ratingchange with the following parameter:
-  // {detail: { rating: CURRENT_RATING }}); when the user selects a rating
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Dispatch ratingchange event when star is clicked
+  
+    Called by:		Callback function in initializeRating, passed in to component
+                  static resource code.
+    =========================================================================*/
+
   ratingChanged(rating) {
     this.dispatchEvent(new CustomEvent('ratingchange', {
       detail: {
