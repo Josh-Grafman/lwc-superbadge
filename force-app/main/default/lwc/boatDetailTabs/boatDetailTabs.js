@@ -46,13 +46,26 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     }
   }
 
-  // Decide when to show or hide the icon
-  // returns 'utility:anchor' or null
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Conditionally return icon for detail tab
+  
+    Called by:		lightning-card component
+    =========================================================================*/
+
   get detailsTabIconName() {
     return this.wiredRecord.data ? 'utility:anchor' : null;
   }
 
-  // Utilize getFieldValue to extract the boat name from the record wire
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Get name of boat from wiredRecord
+  
+    Called by:		lightning-card component
+    =========================================================================*/
+
   get boatName() {
     return getFieldValue(this.wiredRecord.data, BOAT_NAME_FIELD);
   }
@@ -60,7 +73,14 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   // Private
   subscription = null;
 
-  // Subscribe to the message channel
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Subscribe to BOATMC message channel
+  
+    Called by:		connectedCallback
+    =========================================================================*/
+
   subscribeMC() {
     if (this.subscription || this.recordId) {
       return;
@@ -76,12 +96,26 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     );
   }
 
-  // Calls subscribeMC()
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Call subscribeMC
+  
+    Called by:		LWC lifecycle
+    =========================================================================*/
+
   connectedCallback() {
     this.subscribeMC();
   }
 
-  // Navigates to record page
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Navigate to boat record
+  
+    Called by:		lightning-button onclick
+    =========================================================================*/
+
   navigateToRecordViewPage() {
     this[NavigationMixin.Navigate]({
       type: 'standard__recordPage',
@@ -93,7 +127,14 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     });
   }
 
-  // Navigates back to the review list, and refreshes reviews component
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Refresh boat review records, then navigate to reviews tab
+  
+    Called by:		createreview event from c-boat-add-review-form
+    =========================================================================*/
+
   async handleReviewCreated() {
     await this.template.querySelector('c-boat-reviews').refresh();
     this.template.querySelector('lightning-tabset').activeTabValue = 'reviews';
