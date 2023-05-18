@@ -18,7 +18,14 @@ export default class BoatAddReviewForm extends LightningElement {
   labelSubject = 'Review Subject';
   labelRating = 'Rating';
 
-  // Public Getter and Setter to allow for logic to run on recordId change
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Getter and setter for boatId
+  
+    Called by:		boatDetailTabs markup
+    =========================================================================*/
+
   get recordId() {
     return this.boatId;
   }
@@ -28,14 +35,27 @@ export default class BoatAddReviewForm extends LightningElement {
     this.setAttribute('boatId', this.boatId);
   }
 
-  // Gets user rating input from stars component
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Update rating property when rating is changed
+  
+    Called by:		ratingchange event from fiveStarRating component
+    =========================================================================*/
+
   handleRatingChanged(event) {
     this.rating = event.detail.rating;
   }
 
-  // Custom submission handler to properly set Rating
-  // This function must prevent the anchor element from navigating to a URL.
-  // form to be submitted: lightning-record-edit-form
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Add Boat__c and Rating__c fields to form data before
+                  submission.
+  
+    Called by:		submit event from lightning-record-edit-form
+    =========================================================================*/
+
   handleSubmit(event) {
     event.preventDefault();
     let fields = event.detail.fields;
@@ -44,8 +64,15 @@ export default class BoatAddReviewForm extends LightningElement {
     this.template.querySelector('lightning-record-edit-form').submit(fields);
   }
 
-  // Shows a toast message once form is submitted successfully
-  // Dispatches event when a review is created
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Display toast and custom createreview event, then reset form
+                  fields on lightning-record-edit-form.
+  
+    Called by:		success event from lightning-record-edit-form
+    =========================================================================*/
+
   handleSuccess(event) {
     const successToast = new ShowToastEvent({
       title: SUCCESS_TITLE,
@@ -56,12 +83,26 @@ export default class BoatAddReviewForm extends LightningElement {
     this.handleReset();
   }
 
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Log error info from lightning-record-edit-form
+  
+    Called by:		error event from lightning-record-edit-form
+    =========================================================================*/
+
   handleError(event) {
     console.log(JSON.stringify(event.detail));
   }
 
-  // Clears form data upon submission
-  // TODO: it must reset each lightning-input-field
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-18
+    Description:	Reset all form fields including fiveStarRating component
+  
+    Called by:		handleSuccess
+    =========================================================================*/
+
   handleReset() {
     const inputFields = this.template.querySelectorAll(
       'lightning-input-field'
