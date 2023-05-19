@@ -128,6 +128,8 @@
      * @param {Boolean} reset A boolean to tell rating whether it is being reset.
      *   Defaults to false.
      */
+
+    // Edit:JG 2023-05-19 - Add custom bool flag
     function setRating(value, doCallback, reset = false) {
       if (value && value < 0 || value > maxRating) { return; }
       if (doCallback === undefined) { doCallback = true; }

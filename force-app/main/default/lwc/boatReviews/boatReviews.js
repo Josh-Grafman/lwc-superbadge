@@ -79,7 +79,7 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
         boatId: this.boatId
       });
     } catch (e) {
-      console.log(e.body.message);
+      console.error(e.body.message);
     }
     this.isLoading = false;
   }

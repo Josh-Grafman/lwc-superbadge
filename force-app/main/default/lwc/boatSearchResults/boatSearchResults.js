@@ -150,7 +150,7 @@ export default class BoatSearchResults extends LightningElement {
       this.dispatchEvent(successToast);
 
     } catch (error) {
-      console.log(error.body.message);
+      console.error(error.body.message);
       const errorToast = new ShowToastEvent({
         title: ERROR_TITLE,
         message: error.body.message,

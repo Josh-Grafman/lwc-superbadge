@@ -73,7 +73,7 @@ export default class BoatAddReviewForm extends LightningElement {
     Called by:		success event from lightning-record-edit-form
     =========================================================================*/
 
-  handleSuccess(event) {
+  handleSuccess() {
     const successToast = new ShowToastEvent({
       title: SUCCESS_TITLE,
       variant: SUCCESS_VARIANT
@@ -92,7 +92,7 @@ export default class BoatAddReviewForm extends LightningElement {
     =========================================================================*/
 
   handleError(event) {
-    console.log(JSON.stringify(event.detail));
+    console.error(JSON.stringify(event.detail));
   }
 
   /*===========================================================================
