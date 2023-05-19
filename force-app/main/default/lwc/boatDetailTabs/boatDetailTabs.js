@@ -29,6 +29,8 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     labelPleaseSelectABoat,
   };
 
+  staleRecordIds = [];
+
   // Initialize messageContext for Message Service
   @wire(MessageContext)
   messageContext;
@@ -96,15 +98,25 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
         switch (type) {
           case 'select':
             this.boatId = payload.recordId;
-            this.refresh();
+            // if this boat is stale
+            if (this.staleRecordIds.includes(this.boatId)) {
+              // refresh it
+              this.refresh();
+              // its no longer stale
+              this.staleRecordIds = this.staleRecordIds.filter(id => id !== this.boatId);
+            }
             break;
           case 'refresh':
+            console.log(JSON.stringify(payload.recordIds));
+            // immediately refresh if the current boat is in the payload
             if (payload.recordIds.includes(this.boatId)) {
               this.refresh();
+              // add all new changed ids except the current one (already refreshed) to an array of stale record ids
+              this.staleRecordIds = [...new Set([...this.staleRecordIds, ...payload.recordIds.filter(id => id !== this.boatId)])];
             }
             break;
           default:
-            console.error(this.subscribeMC.name, ': Invalid message type recieved in message channel');
+            console.error('Invalid message type recieved in message channel');
             break;
         }
       },
@@ -166,6 +178,13 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     =========================================================================*/
 
   refresh() {
+    console.log(this.refresh.name, ": BoatDetailTabs");
     refreshApex(this.refreshRecord);
   }
+
+  // REMOVE
+  printstale() {
+    console.log('These records are stale: ', JSON.stringify(this.staleRecordIds));
+  }
+  // REMOVE
 }

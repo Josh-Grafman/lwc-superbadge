@@ -10,6 +10,9 @@
       <lightning-tab label={label.labelDetails}>
         <lightning-card title={boatName} icon-name={detailsTabIconName}>
           <lightning-button onclick={navigateToRecordViewPage} slot="actions" label={label.labelFullDetails}></lightning-button>
+          <!-- REMOVE -->
+          <lightning-button onclick={printstale} slot="actions" label="Stale"></lightning-button>
+          <!-- REMOVE -->
           <lightning-record-view-form record-id={boatId} object-api-name="Boat__c" density="compact">
             <lightning-output-field field-name="BoatType__c"></lightning-output-field>
             <lightning-output-field field-name="Length__c"></lightning-output-field>
