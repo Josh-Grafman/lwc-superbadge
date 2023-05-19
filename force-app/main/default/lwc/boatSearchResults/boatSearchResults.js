@@ -115,10 +115,13 @@ export default class BoatSearchResults extends LightningElement {
     =========================================================================*/
 
   sendMessageService(boatId) {
-    const payload = {
-      recordId: boatId
+    const message = {
+      type: 'select',
+      payload: {
+        recordId: boatId
+      }
     };
-    publish(this.messageContext, BOATMC, payload);
+    publish(this.messageContext, BOATMC, message);
   }
 
 
@@ -137,7 +140,6 @@ export default class BoatSearchResults extends LightningElement {
     this.notifyLoading(true);
     const updatedFields = event.detail.draftValues;
     // Update the records via Apex
-    console.log(JSON.stringify({ data: updatedFields }));
     try {
       await updateBoatList({ data: updatedFields });
       const successToast = new ShowToastEvent({
@@ -146,8 +148,9 @@ export default class BoatSearchResults extends LightningElement {
         variant: SUCCESS_VARIANT
       });
       this.dispatchEvent(successToast);
+
     } catch (error) {
-      console.log(body.message);
+      console.log(error.body.message);
       const errorToast = new ShowToastEvent({
         title: ERROR_TITLE,
         message: error.body.message,
@@ -160,6 +163,15 @@ export default class BoatSearchResults extends LightningElement {
       this.template.querySelector("lightning-datatable").draftValues = [];
       // refresh data
       this.refresh();
+
+      // send message to boatDetailTabs
+      const message = {
+        type: 'refresh',
+        payload: {
+          recordIds: updatedFields.map(obj => obj.Id)
+        }
+      };
+      publish(this.messageContext, BOATMC, message);
     }
   }
 

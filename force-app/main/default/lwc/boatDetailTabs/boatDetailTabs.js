@@ -15,6 +15,7 @@ import BOAT_NAME_FIELD from '@salesforce/schema/Boat__c.Name';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { NavigationMixin } from 'lightning/navigation';
 
+import { refreshApex } from '@salesforce/apex';
 
 const BOAT_FIELDS = [BOAT_ID_FIELD, BOAT_NAME_FIELD];
 export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
@@ -33,12 +34,14 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   messageContext;
 
   @wire(getRecord, { recordId: '$boatId', fields: BOAT_FIELDS })
-  setWiredRecord({ data, error }) {
+  setWiredRecord(result) {
+    const { data, error } = result;
     if (data) {
       // unless you assign wiredRecord to a new object, the reference
       // will stay the same, and LWC won't re-evaluation the conditional
       // checks in the markup. In general it seems like LWC really wants
       // reassignment instead of mutation.
+      this.refreshRecord = result;
       this.wiredRecord = { ...this.wiredRecord, data: data };
     } else if (error) {
       this.boatId = undefined;
@@ -89,8 +92,21 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     this.subscription = subscribe(
       this.messageContext,
       BOATMC,
-      (message) => {
-        this.boatId = message.recordId;
+      ({ type, payload }) => {
+        switch (type) {
+          case 'select':
+            this.boatId = payload.recordId;
+            this.refresh();
+            break;
+          case 'refresh':
+            if (payload.recordIds.includes(this.boatId)) {
+              this.refresh();
+            }
+            break;
+          default:
+            console.error(this.subscribeMC.name, ': Invalid message type recieved in message channel');
+            break;
+        }
       },
       { scope: APPLICATION_SCOPE }
     );
@@ -138,5 +154,19 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   async handleReviewCreated() {
     await this.template.querySelector('c-boat-reviews').refresh();
     this.template.querySelector('lightning-tabset').activeTabValue = 'reviews';
+  }
+
+  /*===========================================================================
+    Author:			Josh Grafman, Upsource Solutions
+    Created Date:	2023-05-19
+    Description:	Refresh record from db in response to an edit in
+                  boatSearchResults.
+
+    Called by:		subscribeMC
+    =========================================================================*/
+
+  refresh() {
+    console.log('Refresh called');
+    refreshApex(this.refreshRecord);
   }
 }
