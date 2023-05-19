@@ -166,7 +166,6 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     =========================================================================*/
 
   refresh() {
-    console.log('Refresh called');
     refreshApex(this.refreshRecord);
   }
 }
