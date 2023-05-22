@@ -94,17 +94,15 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
       BOATMC,
       ({ type, payload }) => {
         switch (type) {
+          // blow away the cache every time
           case 'select':
             this.boatId = payload.recordId;
             this.refresh();
             break;
           case 'refresh':
-            if (payload.recordIds.includes(this.boatId)) {
-              this.refresh();
-            }
+            this.refresh();
             break;
           default:
-            console.error(this.subscribeMC.name, ': Invalid message type recieved in message channel');
             break;
         }
       },
