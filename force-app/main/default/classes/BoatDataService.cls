@@ -19,6 +19,21 @@ public with sharing class BoatDataService {
     return Database.query(query);
   }
 
+  // custom method for imperative use
+  @AuraEnabled(cacheable=true)
+  public static List<Boat__c> getBoat(String boatId){
+    String query = 'SELECT '
+                  + 'Name, Description__c, Geolocation__Latitude__s, '
+                  + 'Geolocation__Longitude__s, Picture__c, Contact__r.Name, '
+                  + 'BoatType__c, BoatType__r.Name, Length__c, Price__c '
+                  + 'FROM Boat__c';
+    if (String.isNotBlank(boatId)) {
+      query += ' WHERE Id = :boatId';
+    }
+    query += ' WITH SECURITY_ENFORCED ';
+    return Database.query(query);
+  }
+
   @AuraEnabled(cacheable=true)
   public static List<Boat__c> getSimilarBoats(Id boatId, String similarBy) {
     List<Boat__c> similarBoats = new List<Boat__c>();
