@@ -20,8 +20,8 @@ public with sharing class BoatDataService {
   }
 
   // custom method for imperative use
-  @AuraEnabled(cacheable=true)
-  public static List<Boat__c> getBoat(String boatId){
+  @AuraEnabled(cacheable=false)
+  public static Boat__c getBoat(String boatId) {
     String query = 'SELECT '
                   + 'Name, Description__c, Geolocation__Latitude__s, '
                   + 'Geolocation__Longitude__s, Picture__c, Contact__r.Name, '

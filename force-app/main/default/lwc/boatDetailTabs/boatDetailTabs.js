@@ -12,15 +12,14 @@ import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
 import BOAT_ID_FIELD from '@salesforce/schema/Boat__c.Id';
 import BOAT_NAME_FIELD from '@salesforce/schema/Boat__c.Name';
 
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { NavigationMixin } from 'lightning/navigation';
 
-import { refreshApex } from '@salesforce/apex';
+import getBoat from '@salesforce/apex/BoatDataService.getBoat';
 
 const BOAT_FIELDS = [BOAT_ID_FIELD, BOAT_NAME_FIELD];
 export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   boatId;
-  wiredRecord = {};
+  boat;
   label = {
     labelDetails,
     labelReviews,
@@ -33,22 +32,6 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   @wire(MessageContext)
   messageContext;
 
-  @wire(getRecord, { recordId: '$boatId', fields: BOAT_FIELDS })
-  setWiredRecord(result) {
-    const { data, error } = result;
-    if (data) {
-      // unless you assign wiredRecord to a new object, the reference
-      // will stay the same, and LWC won't re-evaluation the conditional
-      // checks in the markup. In general it seems like LWC really wants
-      // reassignment instead of mutation.
-      this.refreshRecord = result;
-      this.wiredRecord = { ...this.wiredRecord, data: data };
-    } else if (error) {
-      this.boatId = undefined;
-      this.wiredRecord.data = undefined;
-    }
-  }
-
   /*===========================================================================
     Author:			Josh Grafman, Upsource Solutions
     Created Date:	2023-05-18
@@ -58,7 +41,7 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     =========================================================================*/
 
   get detailsTabIconName() {
-    return this.wiredRecord.data ? 'utility:anchor' : null;
+    return this.boat ? 'utility:anchor' : null;
   }
 
   /*===========================================================================
@@ -70,7 +53,7 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     =========================================================================*/
 
   get boatName() {
-    return getFieldValue(this.wiredRecord.data, BOAT_NAME_FIELD);
+    return this.boat ? this.boat.Name : null;
   }
 
   // Private
@@ -83,7 +66,7 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
   
     Called by:		connectedCallback
     =========================================================================*/
-
+  // Edit:JG 2023-05-22 - Changed to use imperative Apex
   subscribeMC() {
     if (this.subscription || this.recordId) {
       return;
@@ -92,15 +75,22 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     this.subscription = subscribe(
       this.messageContext,
       BOATMC,
-      ({ type, payload }) => {
+      async ({ type, payload }) => {
         switch (type) {
-          // blow away the cache every time
           case 'select':
-            this.boatId = payload.recordId;
-            this.refresh();
+            try {
+              this.boatId = payload.recordId;
+              this.boat = await getBoat({ boatId: this.boatId });
+            } catch (e) {
+              console.error(e.message);
+            }
             break;
           case 'refresh':
-            this.refresh();
+            try {
+              this.boat = await getBoat({ boatId: this.boatId });
+            } catch (e) {
+              console.error(e.message);
+            }
             break;
           default:
             break;
@@ -154,16 +144,4 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     this.template.querySelector('lightning-tabset').activeTabValue = 'reviews';
   }
 
-  /*===========================================================================
-    Author:			Josh Grafman, Upsource Solutions
-    Created Date:	2023-05-19
-    Description:	Refresh record from db in response to an edit in
-                  boatSearchResults.
-
-    Called by:		subscribeMC
-    =========================================================================*/
-
-  refresh() {
-    refreshApex(this.refreshRecord);
-  }
 }

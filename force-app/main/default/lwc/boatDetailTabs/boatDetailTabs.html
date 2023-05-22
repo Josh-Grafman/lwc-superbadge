@@ -1,11 +1,11 @@
 <template>
-  <template if:false={wiredRecord.data}>
+  <template if:false={boat}>
     <!-- lightning card for the label when wiredRecord has no data goes here  -->
     <lightning-card>
       <span class="slds-align_absolute-center no-boat-height">{label.labelPleaseSelectABoat}</span>
     </lightning-card>
   </template>
-  <template if:true={wiredRecord.data}>
+  <template if:true={boat}>
     <lightning-tabset variant="scoped">
       <lightning-tab label={label.labelDetails}>
         <lightning-card title={boatName} icon-name={detailsTabIconName}>
